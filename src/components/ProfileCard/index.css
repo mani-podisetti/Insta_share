@@ -1,128 +1,168 @@
-import {Component} from 'react'
-import Loader from 'react-loader-spinner'
-import Cookies from 'js-cookie'
-import Header from '../Header'
-import ProfileCard from '../ProfileCard'
+.Profile-card {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-color: #fafafa;
+}
+.posts-container-user {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: center;
+  list-style-type: none;
+}
+.image-user-details {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.Profile-pic {
+  width: 180px;
+  height: 180px;
+  left: 200px;
+  top: 97px;
+  border-radius: 90px;
+}
+.user-detail-container {
+  margin-left: 60px;
+}
+.profile-head {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 32px;
+  line-height: 32px;
+  color: #262626;
+}
+.count {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.count-follower {
+  font-family: Roboto;
+  font-style: normal;
 
-const apiMyProfileStatus = {
-  initial: 'INITIAL',
-  inProgress: 'IN_PROGRESS',
-  success: 'SUCCESS',
-  failure: 'FAILURE',
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+
+  color: #262626;
+}
+.highlight {
+  font-weight: 500;
+  margin-right: 3px;
+}
+.bio-name {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+  margin-top: 0px;
+  color: #262626;
+}
+.bio {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  /* or 150% */
+
+  color: #262626;
 }
 
-class Profile extends Component {
-  state = {apiProfileStatus: apiMyProfileStatus.initial, profileData: []}
+.user-stories {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 30px;
+  padding-left: 0px;
+}
+.line {
+  border: 0.5px solid #c6c6c8;
+  width: -webkit-fill-available;
+  margin-top: 30px;
+}
+.head-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
+}
+.post-head {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  color: #262626;
+  margin-left: 10px;
+}
 
-  componentDidMount() {
-    this.getMyProfileDetail()
+@media screen and (max-width: 480px) {
+  .Profile-pic {
+    width: 96px;
+    height: 96px;
   }
-
-  getMyProfileDetail = async () => {
-    const token = Cookies.get('jwt_token')
-
-    this.setState({apiProfileStatus: apiMyProfileStatus.inProgress})
-
-    const apiUrl = 'https://apis.ccbp.in/insta-share/my-profile'
-    const options = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      method: 'GET',
-    }
-    const response = await fetch(apiUrl, options)
-    if (response.ok) {
-      const data = await response.json()
-      const updatedData = {
-        profile: {
-          id: data.profile.id,
-          userId: data.profile.user_id,
-          userName: data.profile.user_name,
-          profilePic: data.profile.profile_pic,
-          followersCount: data.profile.followers_count,
-          followingCount: data.profile.following_count,
-          userBio: data.profile.user_bio,
-          postsCount: data.profile.posts_count,
-          posts: data.profile.posts.map(each => ({
-            id: each.id,
-            image: each.image,
-          })),
-          stories: data.profile.stories.map(each => ({
-            id: each.id,
-            image: each.image,
-          })),
-        },
-      }
-      this.setState({
-        profileData: updatedData,
-        apiProfileStatus: apiMyProfileStatus.success,
-      })
-    } else {
-      this.setState({apiProfileStatus: apiMyProfileStatus.failure})
-    }
+  .user-detail-container {
+    margin-left: 30px;
   }
-
-  renderMyProfileSuccessView = () => {
-    const {profileData} = this.state
-
-    return (
-      <ul className="my-profile-container">
-        <ProfileCard data={profileData} my="my" />
-      </ul>
-    )
+  .profile-head {
+    font-weight: 300;
+    font-size: 16px;
   }
+  .count-follower {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
 
-  renderLoadingView = () => (
-    // eslint-disable-next-line react/no-unknown-property
-    <div className="loader-container" testid="loader">
-      <Loader type="TailSpin" color="#4094EF" height={50} width={50} />
-    </div>
-  )
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  onRetry = () => {
-    this.setState(
-      {apiProfileStatus: apiMyProfileStatus.inProgress},
-      this.getMyProfileDetail,
-    )
+    color: #262626;
   }
-
-  renderPostsFailureView = () => (
-    <div className="failure-view">
-      <img
-        src="https://res.cloudinary.com/dq7imhrvo/image/upload/v1643651534/insta%20Shere%20clone/alert-triangle_hczx0o.png"
-        alt="failure view"
-        className="failure-img"
-      />
-      <p className="failure-head">Something went wrong. Please try again</p>
-      <button className="failure-button" type="button" onClick={this.onRetry}>
-        Try again
-      </button>
-    </div>
-  )
-
-  renderMyProfileView = () => {
-    const {apiProfileStatus} = this.state
-
-    switch (apiProfileStatus) {
-      case apiMyProfileStatus.success:
-        return this.renderMyProfileSuccessView()
-      case apiMyProfileStatus.inProgress:
-        return this.renderLoadingView()
-      case apiMyProfileStatus.failure:
-        return this.renderPostsFailureView()
-      default:
-        return null
-    }
+  .highlight {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
   }
-
-  render() {
-    return (
-      <>
-        <Header />
-        {this.renderMyProfileView()}
-      </>
-    )
+  .my-profile-container {
+    padding: 0px;
+    margin: 0px;
+  }
+  .post-image {
+    margin: 1px;
   }
 }
 
-export default Profile
+.bio-container {
+  margin-top: 25px;
+  margin-left: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .bio-container {
+    margin-top: 15px;
+    margin-left: 4px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .bio-container-l {
+    display: none;
+  }
+}
